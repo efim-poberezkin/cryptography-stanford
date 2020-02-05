@@ -41,4 +41,11 @@ for mode_key, key_hex, ciphertext_hex in questions:
     if mode_key == "cbc":
         unpadder = padding.PKCS7(128).unpadder()
         plaintext = unpadder.update(plaintext) + unpadder.finalize()
+    plaintext = plaintext.decode("ascii")
     print(plaintext)
+
+
+# Basic CBC mode encryption needs padding.
+# Our implementation uses rand. IV
+# CTR mode lets you build a stream cipher from a block cipher.
+# Always avoid the two time pad!
