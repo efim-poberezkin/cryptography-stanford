@@ -7,20 +7,20 @@ BLOCK_SIZE = 16  # bytes
 
 
 def main():
-    result = decrypt_ct(TARGET_CT)
-    print(f"ct decryption: {result}")
+    pt = decrypt_ct(TARGET_CT)
+    pt_ascii = bytes.fromhex(pt).decode("ascii")
+    print(f'ct decryption: "{pt_ascii}"')
 
 
 def decrypt_ct(ct):
     ct_bytes = bytes.fromhex(ct)
     blocks = [ct_bytes[i : i + BLOCK_SIZE] for i in range(0, len(ct_bytes), BLOCK_SIZE)]
 
-    pt_bytes = []
-
+    pt = ""
     for i in range(1, len(blocks)):  # first block is IV so we skip decrypting it
-        pt_bytes += decrypt_block(i, blocks)
+        pt += decrypt_block(i, blocks).hex()
 
-    return pt.hex()
+    return pt
 
 
 def decrypt_block(block_num, blocks):
@@ -35,6 +35,7 @@ def decrypt_block(block_num, blocks):
         guess_and_save_byte(block, byte_num, prev_block, block_decryption)
 
     print(f"block #{block_num} decryption: {block_decryption.hex()}")
+    print(f"block #{block_num} ascii: \"{block_decryption.decode('ascii')}\"")
     return block_decryption
 
 
@@ -42,10 +43,9 @@ def guess_and_save_byte(block, byte_num, prev_block, block_decryption):
     pad_byte = BLOCK_SIZE - byte_num
     pad = bytes([pad_byte] * BLOCK_SIZE)
 
-    for g in range(0, 256):
+    for g in range(256):
         block_decryption[byte_num] = g  # guessing block decryption
         ct_guess = bxor(prev_block, bxor(pad, block_decryption)) + block
-
         if query(ct_guess) is True:
             print(f"byte #{byte_num + 1}: {hex(g)}")
             return
