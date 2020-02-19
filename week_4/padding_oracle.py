@@ -31,6 +31,9 @@ def decrypt_block(block_num, blocks):
 
     block_decryption = bytearray(BLOCK_SIZE)  # will be adjusted with guessed bytes by reference
 
+    # TODO check for the last block and add workaround for it as a special case (e.g. cycle through possible pads)
+    # ! right now decryption of the last block fails after remembering wrong pad
+    # ! and then being unable to guess a preceding byte
     for byte_num in range(BLOCK_SIZE - 1, -1, -1):
         guess_and_save_byte(block, byte_num, prev_block, block_decryption)
 
