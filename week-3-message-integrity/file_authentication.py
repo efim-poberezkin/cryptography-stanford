@@ -5,8 +5,8 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 
 
-TARGET_FILE = "week_3/6.1.intro.mp4_download"
-TEST_FILE = "week_3/6.2.birthday.mp4_download"
+TARGET_FILE = "week-3-message-integrity/6.1.intro.mp4_download"
+TEST_FILE = "week-3-message-integrity/6.2.birthday.mp4_download"
 TEST_HASH_ZERO_EXPECTED = "03c08f4ee0b576fe319338139c045c89c3e8e9409633bea29442e21425006ea8"
 BLOCK_SIZE = 1024
 
@@ -16,7 +16,7 @@ def main():
         print(f"--- File: {file} ---")
 
         # compute hash zero and save augmented file
-        augmented_file = "week_3/augmented.bin"
+        augmented_file = "week-3-message-integrity/augmented.bin"
         hash_zero = compute_hash_zero(file, BLOCK_SIZE, augmented_file)
         hash_zero_hex = hexlify(hash_zero).decode("ascii")
         if file == TEST_FILE:
@@ -28,10 +28,10 @@ def main():
         print(f"Passes verification with computed hash zero: {verification_res}")
 
 
-# --- File: week_3/6.2.birthday.mp4_download ---
+# --- File: week-3-message-integrity/6.2.birthday.mp4_download ---
 # Hash zero: 03c08f4ee0b576fe319338139c045c89c3e8e9409633bea29442e21425006ea8
 # Passes verification with computed hash zero: True
-# --- File: week_3/6.1.intro.mp4_download ---
+# --- File: week-3-message-integrity/6.1.intro.mp4_download ---
 # Hash zero: 5b96aece304a1422224f9a41b228416028f9ba26b0d1058f400200f06a589949
 # Passes verification with computed hash zero: True
 
