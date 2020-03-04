@@ -9,6 +9,10 @@ def main():
     p = factoring_challenge_2()
     print(f"---\nfactoring challenge #2:\n{p}")
 
+    # ! fix math
+    p = factoring_challenge_3()
+    print(f"---\nfactoring challenge #3:\n{p}")
+
 
 def factoring_challenge_1():
     """
@@ -54,6 +58,42 @@ def factoring_challenge_2():
             if gmpy2.mul(p, q) == modulus:
                 return p
         a += 1
+
+
+# ! fix math
+def factoring_challenge_3():
+    """
+    Given |3p - 2q| < N^(1/4) and considering A = (3p + 2q) / 2 we can show that
+    A - sqrt(6N) < 1 => A = ceil(sqrt(6N)).
+    Let x be equal distance from A to 3p and 2q, then x = sqrt(A^2 - 6N)
+    => we can calculate p and q based on this.
+    """
+    modulus = mpz(
+        "72006226374735042527956443552558373833808445147399984182665305798191"
+        "63556901883377904234086641876639384851752649940178970835240791356868"
+        "77441155132015188279331812309091996246361896836573643119174094961348"
+        "52463970788523879939683923036467667022162701835329944324119217381272"
+        "9276147530748597302192751375739387929"
+    )
+    a, rem = gmpy2.isqrt_rem(6 * modulus)
+    if rem > 0:
+        a += 1
+    x = gmpy2.isqrt(a ** 2 - 6 * modulus)
+    a_minus_x, a_plus_x = a - x, a + x
+
+    # either p = (A - x) / 3 and q = (A + x) / 2
+    p, rem = gmpy2.f_divmod(a_minus_x, 3)
+    if rem == 0:
+        q, rem = gmpy2.f_divmod(a_plus_x, 2)
+        if gmpy2.mul(p, q) == modulus:
+            return p if p < q else q
+
+    # or p = (A + x) / 3 and q = (A - x) / 2
+    p, rem = gmpy2.f_divmod(a_plus_x, 3)
+    if rem == 0:
+        q = gmpy2.f_div(a_minus_x, 2)
+        if gmpy2.mul(p, q) == modulus:
+            return p if p < q else q
 
 
 if __name__ == "__main__":
